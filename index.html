@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>クルマの冒険、終わらない旅 〜100%リサイクルに挑む最新技術〜</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,29 +12,26 @@
             font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
             background-color: #FDFBF7;
             color: #4A4A4A;
-            overflow-x: hidden;
+            overflow: hidden; /* スクロールを禁止 */
+            height: 100vh;
         }
         .page-view {
             display: none;
-            min-height: calc(100vh - 120px);
+            height: calc(100vh - 100px); /* ナビゲーションとフッターの分を引く */
         }
         .page-view.active {
-            display: block;
-            animation: slideIn 0.5s ease-out forwards;
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.4s ease-out forwards;
         }
         @keyframes slideIn {
             from { opacity: 0; transform: translateX(30px); }
             to { opacity: 1; transform: translateX(0); }
         }
-        /* iPad横向きに最適化したグラフコンテナ */
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 800px; 
-            margin-left: auto;
-            margin-right: auto;
-            height: 55vh; 
-            max-height: 600px;
+            height: 100%;
         }
         .tab-btn.active {
             background-color: #27AE60;
@@ -73,15 +70,19 @@
             from { transform: translateY(0); }
             to { transform: translateY(-8px); }
         }
+        /* iPad横向き用のボタンスタイル調整 */
+        button:active {
+            transform: scale(0.98);
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- プログレスバー -->
+    <!-- プログレスバー（固定上部） -->
     <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md shadow-sm z-50 border-b border-gray-100">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="text-2xl font-extrabold text-[#27AE60] tracking-tighter">♻️ リサイクル大冒険</div>
-            <div id="nav-dots" class="flex items-center space-x-2 md:space-x-4 hidden">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-xl font-extrabold text-[#27AE60] tracking-tighter">♻️ リサイクル大冒険</div>
+            <div id="nav-dots" class="flex items-center space-x-4 hidden">
                 <div class="progress-dot w-4 h-4 rounded-full bg-gray-200" data-step="1"></div>
                 <div class="w-6 h-0.5 bg-gray-100"></div>
                 <div class="progress-dot w-4 h-4 rounded-full bg-gray-200" data-step="2"></div>
@@ -95,242 +96,234 @@
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-4 pt-24 pb-12">
+    <main class="max-w-7xl mx-auto px-6 pt-20 h-full overflow-hidden">
 
         <!-- HOME -->
-        <section id="page-home" class="page-view active">
-            <div class="py-20 text-center">
-                <div class="text-9xl mb-8">🚗✨</div>
-                <h1 class="text-5xl md:text-7xl font-extrabold text-gray-800 mb-10 leading-tight">
-                    クルマの冒険、終わらない旅
-                </h1>
-                <div class="bg-white rounded-[2.5rem] p-10 shadow-xl max-w-3xl mx-auto mb-12 border-2 border-green-50">
-                    <p class="text-2xl text-gray-600 font-bold leading-relaxed">
+        <section id="page-home" class="page-view active justify-center items-center">
+            <div class="text-center">
+                <div class="text-8xl mb-6">🚗✨</div>
+                <h1 class="text-5xl font-extrabold text-gray-800 mb-6 leading-tight">クルマの冒険、終わらない旅</h1>
+                <div class="bg-white rounded-[2.5rem] p-8 shadow-xl max-w-2xl mx-auto mb-8 border-2 border-green-50">
+                    <p class="text-xl text-gray-600 font-bold leading-relaxed">
                         使わなくなったクルマはどこへ行くの？<br>
-                        5つのミッションをクリアして、究極のリサイクルを目指そう！<br>
-                        キミは「S級 リサイクル・マスター」になれるかな？
+                        5つのミッションをクリアして、究極のリサイクルを目指そう！
                     </p>
                 </div>
-                <button onclick="startAdventure()" class="bg-[#E67E22] text-white font-black py-6 px-16 rounded-full shadow-2xl hover:scale-105 transition text-3xl">
-                    冒険をスタートする！ 👇
+                <button onclick="startAdventure()" class="bg-[#E67E22] text-white font-black py-5 px-16 rounded-full shadow-2xl hover:scale-105 transition text-3xl">
+                    冒険をスタート！ 👇
                 </button>
             </div>
         </section>
 
         <!-- MISSION 1: クルマの中身 -->
         <section id="page-1" class="page-view">
-            <div class="bg-white rounded-[3rem] shadow-2xl p-10 border-t-[12px] border-[#3498DB]">
-                <div class="text-center mb-10">
-                    <span class="bg-[#3498DB] text-white text-sm font-black px-6 py-2 rounded-full mb-4 inline-block uppercase tracking-widest">Mission 1</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-gray-800">クルマは何でできている？</h2>
-                    <p class="text-xl text-blue-600 mt-4 font-bold">👇 グラフの素材をタップして調べてね！</p>
+            <div class="flex-1 bg-white rounded-[2.5rem] shadow-xl p-8 border-t-[10px] border-[#3498DB] flex flex-col overflow-hidden">
+                <div class="text-center mb-4">
+                    <span class="bg-[#3498DB] text-white text-xs font-black px-4 py-1 rounded-full mb-1 inline-block">Mission 1</span>
+                    <h2 class="text-3xl font-black text-gray-800">クルマは何でできている？</h2>
                 </div>
                 
-                <div class="flex flex-col items-center">
-                    <div class="chart-container mb-12">
-                        <canvas id="materialsChart"></canvas>
+                <div class="flex-1 flex gap-8 items-center overflow-hidden">
+                    <!-- 左側：巨大グラフ -->
+                    <div class="flex-1 h-full min-h-0">
+                        <div class="chart-container">
+                            <canvas id="materialsChart"></canvas>
+                        </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-5xl">
-                        <div id="material-info-box" class="bg-blue-50 rounded-[2rem] p-8 border-4 border-blue-100 shadow-inner flex flex-col justify-center min-h-[180px]">
-                            <p class="font-black text-blue-800 text-3xl mb-2 text-center" id="material-title">さわってみよう！</p>
-                            <p class="text-xl text-blue-600 text-center font-bold" id="material-desc">色のついた部分をタップすると解説が出るよ</p>
+                    <!-- 右側：解説とクイズ -->
+                    <div class="w-1/3 flex flex-col gap-4">
+                        <div id="material-info-box" class="bg-blue-50 rounded-[1.5rem] p-6 border-4 border-blue-100 shadow-inner flex flex-col justify-center min-h-[140px]">
+                            <p class="font-black text-blue-800 text-2xl mb-1 text-center" id="material-title">さわってみよう！</p>
+                            <p class="text-base text-blue-600 text-center font-bold leading-tight" id="material-desc">色の部分をタップして調べてね</p>
                         </div>
 
-                        <div class="bg-yellow-50 rounded-[2rem] p-8 border-4 border-yellow-200 shadow-sm">
-                            <h3 class="font-black text-center mb-6 text-2xl font-bold">❓ クイズ：クルマ1台の部品の数は？</h3>
-                            <div class="grid grid-cols-1 gap-4" id="quiz-options-1">
-                                <button onclick="checkAnswer(1, 0)" class="quiz-choice bg-white border-4 border-yellow-300 py-4 rounded-2xl font-black text-2xl shadow-md">A: 約5,000こ</button>
-                                <button onclick="checkAnswer(1, 1)" class="quiz-choice bg-white border-4 border-yellow-300 py-4 rounded-2xl font-black text-2xl shadow-md">B: 約30,000こ</button>
-                                <button onclick="checkAnswer(1, 2)" class="quiz-choice bg-white border-4 border-yellow-300 py-4 rounded-2xl font-black text-2xl shadow-md">C: 約100,000こ</button>
+                        <div class="bg-yellow-50 rounded-[1.5rem] p-6 border-4 border-yellow-200 shadow-sm">
+                            <h3 class="font-black text-center mb-4 text-xl">❓ クイズ：部品の数は？</h3>
+                            <div class="space-y-3" id="quiz-options-1">
+                                <button onclick="checkAnswer(1, 0)" class="quiz-choice w-full bg-white border-2 border-yellow-300 py-3 rounded-xl font-black text-lg shadow-sm">A: 約5,000こ</button>
+                                <button onclick="checkAnswer(1, 1)" class="quiz-choice w-full bg-white border-2 border-yellow-300 py-3 rounded-xl font-black text-lg shadow-sm">B: 約30,000こ</button>
+                                <button onclick="checkAnswer(1, 2)" class="quiz-choice w-full bg-white border-2 border-yellow-300 py-3 rounded-xl font-black text-lg shadow-sm">C: 約100,000こ</button>
                             </div>
-                            <div id="quiz-feedback-1" class="hidden mt-6 text-center font-black text-3xl"></div>
+                            <div id="quiz-feedback-1" class="hidden mt-3 text-center font-black text-2xl"></div>
+                        </div>
+
+                        <div class="flex justify-center pt-2">
+                            <button id="next-btn-1" onclick="goToPage(2)" class="hidden bg-[#27AE60] text-white font-black py-4 px-10 rounded-full shadow-lg text-xl hover:scale-105 transition">次へ 🚀</button>
                         </div>
                     </div>
-                </div>
-
-                <div class="flex justify-center pt-10 border-t mt-12">
-                    <button id="next-btn-1" onclick="goToPage(2)" class="hidden bg-[#27AE60] text-white font-black py-6 px-16 rounded-full shadow-2xl text-3xl hover:scale-105 transition">次のミッションへ 🚀</button>
                 </div>
             </div>
         </section>
 
         <!-- MISSION 2: 仕分け -->
         <section id="page-2" class="page-view">
-            <div class="bg-white rounded-[3rem] shadow-2xl p-10 border-t-[12px] border-[#27AE60]">
-                <div class="text-center mb-10">
-                    <span class="bg-[#27AE60] text-white text-sm font-black px-6 py-2 rounded-full mb-4 inline-block uppercase tracking-widest">Mission 2</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-gray-800">魔法の仕分け術！</h2>
+            <div class="flex-1 bg-white rounded-[2.5rem] shadow-xl p-8 border-t-[10px] border-[#27AE60] flex flex-col overflow-hidden">
+                <div class="text-center mb-6">
+                    <span class="bg-[#27AE60] text-white text-xs font-black px-4 py-1 rounded-full mb-1 inline-block">Mission 2</span>
+                    <h2 class="text-3xl font-black text-gray-800">魔法の仕分け術！</h2>
                 </div>
 
-                <div class="flex flex-col lg:flex-row gap-10 mb-12">
-                    <div class="w-full lg:w-3/5 space-y-8">
+                <div class="flex-1 flex gap-8 items-stretch overflow-hidden">
+                    <div class="flex-1 space-y-6">
                         <div class="flex gap-4 justify-center">
-                            <button class="tab-btn active px-10 py-4 rounded-full bg-gray-100 font-black text-xl" data-target="step1">手作業</button>
-                            <button class="tab-btn px-10 py-4 rounded-full bg-gray-100 font-black text-xl" data-target="step2">精密解体</button>
-                            <button class="tab-btn px-10 py-4 rounded-full bg-gray-100 font-black text-xl" data-target="step3">選別マシン</button>
+                            <button class="tab-btn active px-8 py-3 rounded-full bg-gray-100 font-black text-lg" data-target="step1">手作業</button>
+                            <button class="tab-btn px-8 py-3 rounded-full bg-gray-100 font-black text-lg" data-target="step2">精密解体</button>
+                            <button class="tab-btn px-8 py-3 rounded-full bg-gray-100 font-black text-lg" data-target="step3">選別マシン</button>
                         </div>
-                        <div id="tech-display" class="bg-green-50 rounded-[2.5rem] p-10 border-4 border-green-100 min-h-[250px] flex items-center gap-10 shadow-inner">
-                            <div class="text-9xl" id="tech-icon">🛠️</div>
-                            <p id="tech-desc" class="text-3xl font-black text-gray-700 leading-tight">エンジンやタイヤを丁寧に取り外して再利用します。</p>
+                        <div id="tech-display" class="bg-green-50 rounded-[2rem] p-8 border-4 border-green-100 h-full min-h-0 flex items-center gap-8 shadow-inner">
+                            <div class="text-8xl" id="tech-icon">🛠️</div>
+                            <p id="tech-desc" class="text-2xl font-black text-gray-700 leading-tight">エンジンやタイヤを丁寧に取り外して再利用します。</p>
                         </div>
                     </div>
 
-                    <div class="w-full lg:w-2/5 bg-green-50 rounded-[2.5rem] p-8 border-4 border-green-200 shadow-sm flex flex-col justify-center">
-                        <h3 class="font-black text-center mb-6 text-2xl font-bold">❓ なぜ細かく分けるの？</h3>
+                    <div class="w-1/3 bg-green-50 rounded-[2rem] p-6 border-4 border-green-200 shadow-sm flex flex-col justify-center">
+                        <h3 class="font-black text-center mb-6 text-xl">❓ なぜ細かく分けるの？</h3>
                         <div class="space-y-4" id="quiz-options-2">
-                            <button onclick="checkAnswer(2, 0)" class="quiz-choice w-full bg-white border-4 border-green-300 py-5 rounded-2xl font-black text-xl">色をきれいにするため</button>
-                            <button onclick="checkAnswer(2, 1)" class="quiz-choice w-full bg-white border-4 border-green-300 py-5 rounded-2xl font-black text-xl">資源の価値を高めるため</button>
-                            <button onclick="checkAnswer(2, 2)" class="quiz-choice w-full bg-white border-4 border-green-300 py-5 rounded-2xl font-black text-xl">捨てる場所を増やすため</button>
+                            <button onclick="checkAnswer(2, 0)" class="quiz-choice w-full bg-white border-2 border-green-300 py-4 rounded-xl font-black text-lg">色をきれいにするため</button>
+                            <button onclick="checkAnswer(2, 1)" class="quiz-choice w-full bg-white border-2 border-green-300 py-4 rounded-xl font-black text-lg">資源の価値を高めるため</button>
+                            <button onclick="checkAnswer(2, 2)" class="quiz-choice w-full bg-white border-2 border-green-300 py-4 rounded-xl font-black text-lg">捨てる場所を増やすため</button>
                         </div>
-                        <div id="quiz-feedback-2" class="hidden mt-6 text-center font-black text-3xl"></div>
+                        <div id="quiz-feedback-2" class="hidden mt-6 text-center font-black text-2xl"></div>
+                        <div class="flex justify-center pt-6">
+                            <button id="next-btn-2" onclick="goToPage(3)" class="hidden bg-[#27AE60] text-white font-black py-4 px-10 rounded-full shadow-lg text-xl">次へ 🚀</button>
+                        </div>
                     </div>
-                </div>
-
-                <div class="flex justify-between items-center border-t pt-10">
-                    <button onclick="goToPage(1)" class="text-gray-400 font-black text-xl">⬅️ 前へ</button>
-                    <button id="next-btn-2" onclick="goToPage(3)" class="hidden bg-[#27AE60] text-white font-black py-6 px-16 rounded-full shadow-2xl text-2xl">次へ 🚀</button>
                 </div>
             </div>
         </section>
 
         <!-- MISSION 3: 環境保護 -->
         <section id="page-3" class="page-view">
-            <div class="bg-white rounded-[3rem] shadow-2xl p-10 border-t-[12px] border-[#E67E22]">
-                <div class="text-center mb-10">
-                    <span class="bg-[#E67E22] text-white text-sm font-black px-6 py-2 rounded-full mb-4 inline-block uppercase tracking-widest">Mission 3</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-gray-800">地球を守る「抜き取り」</h2>
+            <div class="flex-1 bg-white rounded-[2.5rem] shadow-xl p-8 border-t-[10px] border-[#E67E22] flex flex-col overflow-hidden">
+                <div class="text-center mb-6">
+                    <span class="bg-[#E67E22] text-white text-xs font-black px-4 py-1 rounded-full mb-1 inline-block">Mission 3</span>
+                    <h2 class="text-3xl font-black text-gray-800">地球を守る「抜き取り」</h2>
                 </div>
 
-                <div class="flex flex-col lg:flex-row gap-10 mb-12">
-                    <div class="w-full lg:w-3/5 bg-orange-50 rounded-[2.5rem] p-12 border-4 border-orange-100 flex items-center gap-10 shadow-inner">
+                <div class="flex-1 flex gap-8 items-stretch overflow-hidden">
+                    <div class="flex-1 bg-orange-50 rounded-[2rem] p-10 border-4 border-orange-100 flex items-center gap-8 shadow-inner">
                         <div class="text-9xl">🛢️</div>
                         <p class="text-2xl font-black text-gray-700 leading-relaxed">
-                            オイルやガソリン、エアコンのフロンガスを、地球に逃さないように専用の道具で抜き取るよ。これが最初の大事な仕事！
+                            オイルやガソリン、フロンガスを、地球に逃さないように専用の道具で抜き取るよ。これが最初の大事な仕事！
                         </p>
                     </div>
 
-                    <div class="w-full lg:w-2/5 bg-orange-50 rounded-[2.5rem] p-8 border-4 border-orange-200 shadow-sm flex flex-col justify-center">
-                        <h3 class="font-black text-center mb-6 text-2xl font-bold">❓ オゾン層を壊すのは？</h3>
+                    <div class="w-1/3 bg-orange-50 rounded-[2rem] p-6 border-4 border-orange-200 shadow-sm flex flex-col justify-center">
+                        <h3 class="font-black text-center mb-6 text-xl">❓ オゾン層を壊すのは？</h3>
                         <div class="space-y-4" id="quiz-options-3">
-                            <button onclick="checkAnswer(3, 0)" class="quiz-choice w-full bg-white border-4 border-orange-300 py-5 rounded-2xl font-black text-xl">エンジンオイル</button>
-                            <button onclick="checkAnswer(3, 1)" class="quiz-choice w-full bg-white border-4 border-orange-300 py-5 rounded-2xl font-black text-xl">フロンガス</button>
-                            <button onclick="checkAnswer(3, 2)" class="quiz-choice w-full bg-white border-4 border-orange-300 py-5 rounded-2xl font-black text-xl">冷却水</button>
+                            <button onclick="checkAnswer(3, 0)" class="quiz-choice w-full bg-white border-2 border-orange-300 py-4 rounded-xl font-black text-lg">エンジンオイル</button>
+                            <button onclick="checkAnswer(3, 1)" class="quiz-choice w-full bg-white border-2 border-orange-300 py-4 rounded-xl font-black text-lg">フロンガス</button>
+                            <button onclick="checkAnswer(3, 2)" class="quiz-choice w-full bg-white border-2 border-orange-300 py-4 rounded-xl font-black text-lg">冷却水</button>
                         </div>
-                        <div id="quiz-feedback-3" class="hidden mt-6 text-center font-black text-3xl"></div>
+                        <div id="quiz-feedback-3" class="hidden mt-6 text-center font-black text-2xl"></div>
+                        <div class="flex justify-center pt-6">
+                            <button id="next-btn-3" onclick="goToPage(4)" class="hidden bg-[#27AE60] text-white font-black py-4 px-10 rounded-full shadow-lg text-xl">次へ 🚀</button>
+                        </div>
                     </div>
-                </div>
-
-                <div class="flex justify-between items-center border-t pt-10">
-                    <button onclick="goToPage(2)" class="text-gray-400 font-black text-xl">⬅️ 前へ</button>
-                    <button id="next-btn-3" onclick="goToPage(4)" class="hidden bg-[#27AE60] text-white font-black py-6 px-16 rounded-full shadow-2xl text-2xl">次へ 🚀</button>
                 </div>
             </div>
         </section>
 
         <!-- MISSION 4: EVバッテリー -->
         <section id="page-4" class="page-view">
-            <div class="bg-white rounded-[3rem] shadow-2xl p-10 border-t-[12px] border-[#9B59B6]">
-                <div class="text-center mb-10">
-                    <span class="bg-[#9B59B6] text-white text-sm font-black px-6 py-2 rounded-full mb-4 inline-block uppercase tracking-widest">Mission 4</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-gray-800">未来をつなぐバッテリー</h2>
+            <div class="flex-1 bg-white rounded-[2.5rem] shadow-xl p-8 border-t-[10px] border-[#9B59B6] flex flex-col overflow-hidden">
+                <div class="text-center mb-6">
+                    <span class="bg-[#9B59B6] text-white text-xs font-black px-4 py-1 rounded-full mb-1 inline-block">Mission 4</span>
+                    <h2 class="text-3xl font-black text-gray-800">未来をつなぐバッテリー</h2>
                 </div>
 
-                <div class="flex flex-col lg:flex-row gap-10 mb-12">
-                    <div class="w-full lg:w-3/5 space-y-8 text-center">
+                <div class="flex-1 flex gap-8 items-stretch overflow-hidden">
+                    <div class="flex-1 space-y-6 text-center">
                         <div class="flex justify-center gap-6">
-                            <div class="step-btn active border-4 border-purple-200 rounded-full w-28 h-28 flex flex-col items-center justify-center text-5xl bg-white shadow-xl" data-step="1">🏠<span class="text-[10px] font-black">REUSE</span></div>
-                            <div class="step-btn border-4 border-purple-200 rounded-full w-28 h-28 flex flex-col items-center justify-center text-5xl bg-white shadow-xl" data-step="2">🧪<span class="text-[10px] font-black">RECYCLE</span></div>
-                            <div class="step-btn border-4 border-purple-200 rounded-full w-28 h-28 flex flex-col items-center justify-center text-5xl bg-white shadow-xl" data-step="3">🔋<span class="text-[10px] font-black">NEW</span></div>
+                            <div class="step-btn active border-4 border-purple-200 rounded-full w-24 h-24 flex flex-col items-center justify-center text-4xl bg-white shadow-xl" data-step="1">🏠<span class="text-[8px] font-black">REUSE</span></div>
+                            <div class="step-btn border-4 border-purple-200 rounded-full w-24 h-24 flex flex-col items-center justify-center text-4xl bg-white shadow-xl" data-step="2">🧪<span class="text-[8px] font-black">RECYCLE</span></div>
+                            <div class="step-btn border-4 border-purple-200 rounded-full w-24 h-24 flex flex-col items-center justify-center text-4xl bg-white shadow-xl" data-step="3">🔋<span class="text-[8px] font-black">NEW</span></div>
                         </div>
-                        <div class="bg-purple-50 rounded-[2.5rem] p-10 border-4 border-purple-100 min-h-[220px] shadow-inner flex flex-col justify-center">
-                            <h4 id="batt-title" class="font-black text-[#9B59B6] text-4xl mb-4">リユース</h4>
-                            <p id="batt-desc" class="text-2xl font-bold text-gray-700">お家の蓄電池として第2の人生！</p>
+                        <div class="bg-purple-50 rounded-[2rem] p-8 border-4 border-purple-100 h-full min-h-0 shadow-inner flex flex-col justify-center">
+                            <h4 id="batt-title" class="font-black text-[#9B59B6] text-3xl mb-2">リユース</h4>
+                            <p id="batt-desc" class="text-xl font-bold text-gray-700 leading-tight">お家の蓄電池として、第2の人生！</p>
                         </div>
                     </div>
 
-                    <div class="w-full lg:w-2/5 bg-purple-50 rounded-[2.5rem] p-8 border-4 border-purple-200 shadow-sm flex flex-col justify-center">
-                        <h3 class="font-black text-center mb-6 text-2xl font-bold">❓ 戻せる資源の割合は？</h3>
+                    <div class="w-1/3 bg-purple-50 rounded-[2rem] p-6 border-4 border-purple-200 shadow-sm flex flex-col justify-center">
+                        <h3 class="font-black text-center mb-6 text-xl">❓ 戻せる資源の割合は？</h3>
                         <div class="space-y-4" id="quiz-options-4">
-                            <button onclick="checkAnswer(4, 0)" class="quiz-choice w-full bg-white border-4 border-purple-300 py-5 rounded-2xl font-black text-xl">約30%</button>
-                            <button onclick="checkAnswer(4, 1)" class="quiz-choice w-full bg-white border-4 border-purple-300 py-5 rounded-2xl font-black text-xl">約60%</button>
-                            <button onclick="checkAnswer(4, 2)" class="quiz-choice w-full bg-white border-4 border-purple-300 py-5 rounded-2xl font-black text-xl">95%以上！</button>
+                            <button onclick="checkAnswer(4, 0)" class="quiz-choice w-full bg-white border-2 border-purple-300 py-4 rounded-xl font-black text-lg">約30%</button>
+                            <button onclick="checkAnswer(4, 1)" class="quiz-choice w-full bg-white border-2 border-purple-300 py-4 rounded-xl font-black text-lg">約60%</button>
+                            <button onclick="checkAnswer(4, 2)" class="quiz-choice w-full bg-white border-2 border-purple-300 py-4 rounded-xl font-black text-lg">95%以上！</button>
                         </div>
-                        <div id="quiz-feedback-4" class="hidden mt-6 text-center font-black text-3xl"></div>
+                        <div id="quiz-feedback-4" class="hidden mt-6 text-center font-black text-2xl"></div>
+                        <div class="flex justify-center pt-6">
+                            <button id="next-btn-4" onclick="goToPage(5)" class="hidden bg-[#27AE60] text-white font-black py-4 px-10 rounded-full shadow-lg text-xl">次へ 🚀</button>
+                        </div>
                     </div>
-                </div>
-
-                <div class="flex justify-between items-center border-t pt-10">
-                    <button onclick="goToPage(3)" class="text-gray-400 font-black text-xl">⬅️ 前へ</button>
-                    <button id="next-btn-4" onclick="goToPage(5)" class="hidden bg-[#27AE60] text-white font-black py-6 px-16 rounded-full shadow-2xl text-2xl">最後へ 🚀</button>
                 </div>
             </div>
         </section>
 
         <!-- MISSION 5: 循環経済 -->
         <section id="page-5" class="page-view">
-            <div class="bg-white rounded-[3rem] shadow-2xl p-10 border-t-[12px] border-[#3498DB]">
-                <div class="text-center mb-10">
-                    <span class="bg-[#3498DB] text-white text-sm font-black px-6 py-2 rounded-full mb-4 inline-block uppercase tracking-widest">Mission 5</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-gray-800">めぐる資源、未来へ！</h2>
+            <div class="flex-1 bg-white rounded-[2.5rem] shadow-xl p-8 border-t-[10px] border-[#3498DB] flex flex-col overflow-hidden">
+                <div class="text-center mb-6">
+                    <span class="bg-[#3498DB] text-white text-xs font-black px-4 py-1 rounded-full mb-1 inline-block">Mission 5</span>
+                    <h2 class="text-3xl font-black text-gray-800">めぐる資源、未来へ！</h2>
                 </div>
 
-                <div class="flex flex-col lg:flex-row gap-10 mb-12">
-                    <div class="w-full lg:w-3/5 bg-blue-50 rounded-[2.5rem] p-12 border-4 border-blue-100 text-center shadow-inner">
-                        <div class="flex justify-center items-center gap-6 text-7xl md:text-8xl mb-8">
+                <div class="flex-1 flex gap-8 items-stretch overflow-hidden">
+                    <div class="flex-1 bg-blue-50 rounded-[2rem] p-10 border-4 border-blue-100 text-center shadow-inner flex flex-col justify-center">
+                        <div class="flex justify-center items-center gap-8 text-7xl mb-6">
                             <span>🧱</span><span>➡️</span><span>🗼</span><span>➡️</span><span>🚗</span>
                         </div>
-                        <p class="text-2xl font-black text-gray-700 leading-relaxed">
-                            鉄やアルミは溶かしてピカピカの素材に戻り、また新しいビルやクルマに生まれ変わるんだ。
+                        <p class="text-2xl font-black text-gray-700 leading-tight">
+                            素材は溶かされてまた新しいクルマに生まれ変わるんだ。
                         </p>
                     </div>
 
-                    <div class="w-full lg:w-2/5 bg-blue-50 rounded-[2.5rem] p-8 border-4 border-blue-200 shadow-sm flex flex-col justify-center text-center">
-                        <h3 class="font-black text-center mb-6 text-2xl font-bold">❓ 使い続ける仕組みの名は？</h3>
+                    <div class="w-1/3 bg-blue-50 rounded-[2rem] p-6 border-4 border-blue-200 shadow-sm flex flex-col justify-center text-center">
+                        <h3 class="font-black text-center mb-6 text-xl leading-tight">❓ ずっと使い続ける仕組みの名は？</h3>
                         <div class="space-y-4" id="quiz-options-5">
-                            <button onclick="checkAnswer(5, 0)" class="quiz-choice w-full bg-white border-4 border-blue-300 py-5 rounded-2xl font-black text-xl">サーキュラーエコノミー</button>
-                            <button onclick="checkAnswer(5, 1)" class="quiz-choice w-full bg-white border-4 border-blue-300 py-5 rounded-2xl font-black text-xl">パワーエコノミー</button>
-                            <button onclick="checkAnswer(5, 2)" class="quiz-choice w-full bg-white border-4 border-blue-300 py-5 rounded-2xl font-black text-xl">スピードリサイクル</button>
+                            <button onclick="checkAnswer(5, 0)" class="quiz-choice w-full bg-white border-2 border-blue-300 py-4 rounded-xl font-black text-lg">サーキュラーエコノミー</button>
+                            <button onclick="checkAnswer(5, 1)" class="quiz-choice w-full bg-white border-2 border-blue-300 py-4 rounded-xl font-black text-lg">パワーエコノミー</button>
+                            <button onclick="checkAnswer(5, 2)" class="quiz-choice w-full bg-white border-2 border-blue-300 py-4 rounded-xl font-black text-lg">スピードリサイクル</button>
                         </div>
-                        <div id="quiz-feedback-5" class="hidden mt-6 text-center font-black text-3xl"></div>
+                        <div id="quiz-feedback-5" class="hidden mt-6 text-center font-black text-2xl"></div>
+                        <div class="flex justify-center pt-6">
+                            <button id="next-btn-5" onclick="showResults()" class="hidden bg-[#27AE60] text-white font-black py-4 px-10 rounded-full shadow-lg text-xl">結果 🏁</button>
+                        </div>
                     </div>
-                </div>
-
-                <div class="flex justify-between items-center border-t pt-10">
-                    <button onclick="goToPage(4)" class="text-gray-400 font-black text-xl">⬅️ 前へ</button>
-                    <button id="next-btn-5" onclick="showResults()" class="hidden bg-[#27AE60] text-white font-black py-6 px-16 rounded-full shadow-2xl text-3xl">結果を見る 🏁</button>
                 </div>
             </div>
         </section>
 
         <!-- RESULT -->
-        <section id="page-result" class="page-view">
-            <div class="py-12 text-center">
-                <div class="text-[12rem] mb-10" id="result-emoji">🏅</div>
-                <h2 class="text-6xl font-black mb-6">冒険コンプリート！</h2>
-                <p class="text-3xl mb-10 font-bold text-gray-600">キミの正解数は... <span id="final-score" class="text-8xl text-[#E67E22] font-black">0</span> / 5</p>
+        <section id="page-result" class="page-view justify-center items-center">
+            <div class="text-center">
+                <div class="text-[10rem] mb-6 leading-none" id="result-emoji">🏅</div>
+                <h2 class="text-5xl font-black mb-4">冒険コンプリート！</h2>
+                <p class="text-2xl mb-6 font-bold text-gray-600">正解数: <span id="final-score" class="text-7xl text-[#E67E22] font-black">0</span> / 5</p>
                 
-                <div class="bg-white rounded-[3.5rem] p-12 shadow-2xl max-w-2xl mx-auto border-[6px] border-[#27AE60] mb-12">
-                    <p class="text-xl uppercase tracking-widest text-gray-400 font-black mb-4">リサイクル・ランク</p>
-                    <div id="result-rank" class="text-5xl font-black text-[#27AE60] mb-6">リサイクル・マスター</div>
-                    <p id="result-comment" class="text-2xl font-bold text-gray-600">地球を救うリサイクルの天才だ！</p>
+                <div class="bg-white rounded-[2.5rem] p-8 shadow-2xl max-w-xl mx-auto border-[6px] border-[#27AE60] mb-8">
+                    <p class="text-lg uppercase tracking-widest text-gray-400 font-black mb-2">リサイクル・ランク</p>
+                    <div id="result-rank" class="text-4xl font-black text-[#27AE60] mb-4">リサイクル・マスター</div>
+                    <p id="result-comment" class="text-xl font-bold text-gray-600">地球を救う天才だ！</p>
                 </div>
 
-                <button onclick="location.reload()" class="bg-gray-800 text-white font-black py-8 px-20 rounded-full shadow-2xl hover:scale-105 transition text-3xl">もういちど挑戦する ♻️</button>
+                <button onclick="location.reload()" class="bg-gray-800 text-white font-black py-5 px-16 rounded-full shadow-2xl hover:scale-105 transition text-2xl">もういちど挑戦 ♻️</button>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-white border-t border-gray-100 py-8 text-center mt-20">
-        <p class="text-lg text-gray-500 font-black">© 2026 NPO法人RUMアライアンス</p>
+    <footer class="fixed bottom-0 w-full bg-white border-t border-gray-100 py-2 text-center">
+        <p class="text-sm text-gray-500 font-black">© 2026 NPO法人RUMアライアンス</p>
     </footer>
 
     <script>
         let score = 0;
         let answeredSteps = [false, false, false, false, false, false];
         
-        // オーディオコンテキスト管理
+        // オーディオ
         let audioCtx;
         function initAudio() {
             if (!audioCtx) {
@@ -338,51 +331,39 @@
             }
         }
 
-        // 正解音 (Web Audio API で生成)
         function playCorrectSound() {
             if (!audioCtx) return;
             const osc1 = audioCtx.createOscillator();
             const osc2 = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            
             osc1.type = 'sine'; osc2.type = 'sine';
-            osc1.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-            osc2.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
-            
+            osc1.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+            osc2.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
             osc1.connect(gain); osc2.connect(gain);
             gain.connect(audioCtx.destination);
-            
             gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-            
             osc1.start(); osc1.stop(audioCtx.currentTime + 0.2);
             osc2.start(audioCtx.currentTime + 0.1); osc2.stop(audioCtx.currentTime + 0.5);
         }
 
-        // 不正解音 (Web Audio API で生成)
         function playWrongSound() {
             if (!audioCtx) return;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(146.83, audioCtx.currentTime); // D3
-            osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.4); // A2
-            
+            osc.frequency.setValueAtTime(146.83, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.4);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-            
             gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-            
             osc.start(); osc.stop(audioCtx.currentTime + 0.4);
         }
 
         function startAdventure() {
-            initAudio(); // iPad対策: ユーザー操作でオーディオ開始
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            initAudio();
+            if (audioCtx.state === 'suspended') { audioCtx.resume(); }
             document.getElementById('nav-dots').classList.remove('hidden');
             goToPage(1);
         }
@@ -391,39 +372,29 @@
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
             const target = pageId === 0 ? 'home' : (pageId === 6 ? 'result' : pageId);
             document.getElementById('page-' + target).classList.add('active');
-
             document.querySelectorAll('.progress-dot').forEach(dot => {
                 const step = parseInt(dot.dataset.step);
                 dot.classList.toggle('active', step <= pageId);
             });
-
             if (pageId === 1 && !window.chartInited) {
                 setTimeout(initChart, 300);
                 window.chartInited = true;
             }
-            window.scrollTo(0,0);
         }
 
         const quizData = {
-            1: { correct: 1, feedback: { ok: "せいかい！🎉 約3万個もあるよ！", ng: "ざんねん！正解はBだよ😢" } },
-            2: { correct: 1, feedback: { ok: "せいかい！✨ 価値が上がるんだ！", ng: "ざんねん！正解はBだよ😢" } },
-            3: { correct: 1, feedback: { ok: "せいかい！❄️ 危険なガスなんだ！", ng: "ざんねん！正解はBだよ😢" } },
-            4: { correct: 2, feedback: { ok: "せいかい！🔋 ほぼ全部戻るよ！", ng: "ざんねん！正解はCだよ😢" } },
-            5: { correct: 0, feedback: { ok: "せいかい！🌀 循環経済のことだね！", ng: "ざんねん！正解はAだよ😢" } }
+            1: { correct: 1, feedback: { ok: "せいかい！🎉", ng: "ざんねん！Bだよ😢" } },
+            2: { correct: 1, feedback: { ok: "せいかい！✨", ng: "ざんねん！Bだよ😢" } },
+            3: { correct: 1, feedback: { ok: "せいかい！❄️", ng: "ざんねん！Bだよ😢" } },
+            4: { correct: 2, feedback: { ok: "せいかい！🔋", ng: "ざんねん！Cだよ😢" } },
+            5: { correct: 0, feedback: { ok: "せいかい！🌀", ng: "ざんねん！Aだよ😢" } }
         };
 
         function checkAnswer(step, choice) {
             if (answeredSteps[step]) return;
             answeredSteps[step] = true;
-
             const isCorrect = (choice === quizData[step].correct);
-            if (isCorrect) {
-                score++;
-                playCorrectSound();
-            } else {
-                playWrongSound();
-            }
-
+            if (isCorrect) { score++; playCorrectSound(); } else { playWrongSound(); }
             const buttons = document.querySelectorAll(`#quiz-options-${step} button`);
             buttons.forEach((btn, idx) => {
                 btn.disabled = true;
@@ -431,16 +402,12 @@
                     btn.classList.add('bg-green-500', 'text-white', 'border-green-600');
                 } else if (idx === choice) {
                     btn.classList.add('bg-red-400', 'text-white', 'border-red-500');
-                } else {
-                    btn.classList.add('opacity-30');
-                }
+                } else { btn.classList.add('opacity-30'); }
             });
-
             const fb = document.getElementById(`quiz-feedback-${step}`);
             fb.classList.remove('hidden');
             fb.textContent = isCorrect ? quizData[step].feedback.ok : quizData[step].feedback.ng;
-            fb.className = isCorrect ? 'mt-8 text-center font-black text-4xl feedback-correct' : 'mt-8 text-center font-black text-4xl feedback-wrong';
-
+            fb.className = isCorrect ? 'mt-4 text-center font-black text-2xl feedback-correct' : 'mt-4 text-center font-black text-2xl feedback-wrong';
             document.getElementById(`next-btn-${step}`).classList.remove('hidden');
         }
 
@@ -448,22 +415,20 @@
             goToPage(6);
             document.getElementById('nav-dots').classList.add('hidden');
             document.getElementById('final-score').textContent = score;
-
             const rank = document.getElementById('result-rank');
             const comment = document.getElementById('result-comment');
             const emoji = document.getElementById('result-emoji');
-
             if (score === 5) {
-                rank.textContent = "S級 リサイクル・マスター";
-                comment.textContent = "完璧だ！キミは高度な資源循環のリーダーになれるよ！";
+                rank.textContent = "S級 マスター";
+                comment.textContent = "完璧だ！高度な資源循環のリーダーだね！";
                 emoji.textContent = "👑";
             } else if (score >= 3) {
-                rank.textContent = "A級 リサイクル・ヒーロー";
-                comment.textContent = "素晴らしい！クルマの資源についてかなり詳しいね！";
+                rank.textContent = "A級 ヒーロー";
+                comment.textContent = "素晴らしい！クルマにかなり詳しいね！";
                 emoji.textContent = "🌟";
             } else {
-                rank.textContent = "B級 リサイクル・ルーキー";
-                comment.textContent = "参加してくれてありがとう！全問正解を目指して再挑戦だ！";
+                rank.textContent = "B級 ルーキー";
+                comment.textContent = "ありがとう！全問正解を目指して再挑戦だ！";
                 emoji.textContent = "🚲";
             }
         }
@@ -474,9 +439,8 @@
                 '鉄': { t: '鉄 (約70%)', d: 'ボディやフレームになります。溶かして新しい建物やクルマになるよ！' },
                 'アルミ': { t: 'アルミ (約10%)', d: 'エンジンやホイールになります。軽くて何度も使える優等生！' },
                 'プラスチック': { t: 'プラスチック (約10%)', d: '内装などになります。高度な技術で、またパーツに戻せるんだ！' },
-                'レアメタル等': { t: 'レアメタル等 (約10%)', d: '銅などの貴重な金属です。家電の材料にもなる宝物だよ！' }
+                'レアメタル等': { t: 'レアメタル等 (約10%)', d: '銅などの貴重な金属。家電の材料にもなる宝物だよ！' }
             };
-
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -484,20 +448,13 @@
                     datasets: [{
                         data: [70, 10, 10, 10],
                         backgroundColor: ['#34495E', '#BDC3C7', '#E67E22', '#F1C40F'],
-                        borderWidth: 6,
-                        borderColor: '#ffffff',
-                        hoverOffset: 45 
+                        borderWidth: 6, borderColor: '#ffffff', hoverOffset: 45 
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: { padding: 40 },
+                    responsive: true, maintainAspectRatio: false,
                     plugins: {
-                        legend: { 
-                            position: 'bottom',
-                            labels: { font: { family: "'M PLUS Rounded 1c'", size: 22, weight: 'bold' }, padding: 35 }
-                        },
+                        legend: { position: 'bottom', labels: { font: { family: "'M PLUS Rounded 1c'", size: 18, weight: 'bold' } } },
                         tooltip: { enabled: false }
                     },
                     onClick: (e, el) => {
@@ -506,10 +463,6 @@
                             const d = mData[lbl];
                             document.getElementById('material-title').textContent = d.t;
                             document.getElementById('material-desc').textContent = d.d;
-                            
-                            const box = document.getElementById('material-info-box');
-                            box.style.transform = 'scale(1.02)';
-                            setTimeout(() => box.style.transform = 'scale(1)', 150);
                         }
                     }
                 }
@@ -521,9 +474,9 @@
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const info = {
-                    step1: { i: '🛠️', d: 'エンジンやタイヤを丁寧に取り外して再利用します。' },
-                    step2: { i: '🧲', d: '銅線一本まで逃さず、素材ごとに細かく分けます。' },
-                    step3: { i: '🌬️', d: '風や磁石の力で、小さな資源も1つずつ回収します。' }
+                    step1: { i: '🛠️', d: '中古部品として丁寧に再利用します。' },
+                    step2: { i: '🧲', d: '銅線一本まで逃さず細かく分けます。' },
+                    step3: { i: '🌬️', d: '風や磁石で資源を1つずつ回収します。' }
                 }[btn.dataset.target];
                 document.getElementById('tech-icon').textContent = info.i;
                 document.getElementById('tech-desc').textContent = info.d;
@@ -535,9 +488,9 @@
                 document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const info = {
-                    1: { t: 'リユース', d: 'お家の蓄電池として、太陽光の電気をためる第2の人生！' },
-                    2: { t: 'リサイクル', d: '最新の化学技術で「リチウム」などをきれいに取り出すんだ。' },
-                    3: { t: 'またバッテリーへ', d: '取り出した資源を使って、新しいEVバッテリーを作ります！' }
+                    1: { t: 'リユース', d: '蓄電池として第2の人生！' },
+                    2: { t: 'リサイクル', d: '貴重な資源をきれいに取り出します。' },
+                    3: { t: 'またバッテリーへ', d: '新しいEVバッテリーを作ります！' }
                 }[btn.dataset.step];
                 document.getElementById('batt-title').textContent = info.t;
                 document.getElementById('batt-desc').textContent = info.d;
