@@ -7,7 +7,9 @@ const SYSTEM_PROMPT =
   "小学生にもわかるように、優しく、楽しく、専門用語を避けて解説してください。" +
   "語尾は『〜だよ』『〜だね』など。回答は短く（150文字以内）。";
 
-const MODEL = "gemini-2.5-flash-preview-09-2025";
+// 利用可能なモデル: gemini-2.5-flash, gemini-2.5-flash-lite, gemini-2.5-pro など
+// 「Preview」付きモデルは突然廃止される可能性があるため、安定版を使用
+const MODEL = "gemini-2.5-flash";
 
 export default async function handler(req, res) {
   // POST 以外は拒否
