@@ -664,9 +664,16 @@
             const buttons = document.querySelectorAll(`#quiz-options-${step} button`);
             buttons.forEach((btn, idx) => {
                 btn.disabled = true;
+                // 元の bg-white / 各色の border-*-300 を取り除いてから新しい色を適用する
+                // （Tailwind の出力順により bg-white が後勝ちとなり、白文字×白背景で見えなくなるのを防止）
+                btn.classList.remove(
+                    'bg-white',
+                    'border-yellow-300', 'border-green-300', 'border-orange-300',
+                    'border-purple-300', 'border-blue-300'
+                );
                 if (idx === quizData[step].correct) btn.classList.add('bg-green-500', 'text-white', 'border-green-600');
                 else if (idx === choice) btn.classList.add('bg-red-400', 'text-white', 'border-red-500');
-                else btn.classList.add('opacity-30', 'bg-gray-100');
+                else btn.classList.add('opacity-30', 'bg-gray-100', 'text-gray-500');
             });
             const fb = document.getElementById(`quiz-feedback-${step}`);
             fb.classList.remove('hidden');
