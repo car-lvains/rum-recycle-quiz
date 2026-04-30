@@ -12,7 +12,6 @@
             font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
             background-color: #FDFBF7;
             color: #4A4A4A;
-            /* iPad/PCではスクロール禁止、スマホでは縦スクロールを許可 */
             overflow-x: hidden;
             overflow-y: auto;
             min-height: 100vh;
@@ -84,7 +83,6 @@
             to { transform: translateY(-8px); }
         }
         
-        /* Mission 5 Animation */
         .m5-step {
             opacity: 0;
             transform: scale(0.5);
@@ -200,7 +198,6 @@
                         <span class="bg-[#3498DB] text-white text-sm md:text-xl font-black px-3 md:px-5 py-1 rounded-xl shadow-lg transform -rotate-1">Mission 1</span>
                         <h2 class="text-lg md:text-3xl font-black text-gray-800">クルマは何でできている？</h2>
                     </div>
-                    <div class="text-[10px] md:text-xs font-black text-blue-400 bg-white px-3 py-1 rounded-full border border-blue-100">👆 グラフをタッチ！</div>
                 </div>
                 <div class="flex-1 flex flex-col md:flex-row gap-4 md:gap-6 items-center overflow-auto md:overflow-hidden">
                     <div class="w-full md:flex-1 h-full min-h-0 flex flex-col">
@@ -377,30 +374,34 @@
             </div>
         </section>
 
-        <!-- RESULT -->
+        <!-- RESULT (修正箇所: マイクボタンが見切れないように最適化) -->
         <section id="page-result" class="page-view justify-center items-center">
-            <div class="text-center w-full max-w-5xl px-4">
-                <div class="text-7xl md:text-[7rem] mb-4 leading-none" id="result-emoji">🏅</div>
-                <h2 class="text-3xl md:text-5xl font-black mb-2">冒険コンプリート！</h2>
-                <p class="text-xl md:text-2xl mb-4 font-bold text-gray-600">正解数: <span id="final-score" class="text-5xl md:text-7xl text-[#E67E22] font-black">0</span> / 5</p>
-                <div class="flex flex-col md:flex-row gap-4 md:gap-6 mb-8">
-                    <div class="flex-1 bg-white rounded-[2rem] md:rounded-[3rem] p-6 md:p-8 shadow-2xl border-[4px] md:border-[6px] border-[#27AE60] flex flex-col justify-center">
-                        <p class="text-sm md:text-2xl uppercase tracking-widest text-gray-400 font-black mb-1 md:mb-2">リサイクル・ランク</p>
-                        <div id="result-rank" class="text-2xl md:text-4xl font-black text-[#27AE60] mb-1 md:mb-2">リサイクル・マスター</div>
-                        <p id="result-comment" class="text-base md:text-2xl font-bold text-gray-600">地球を救う天才だ！</p>
+            <div class="text-center w-full max-w-5xl px-4 py-6">
+                <div class="text-7xl md:text-[7rem] mb-2 md:mb-4 leading-none" id="result-emoji">🏅</div>
+                <h2 class="text-2xl md:text-5xl font-black mb-1 md:mb-2">冒険コンプリート！</h2>
+                <p class="text-lg md:text-2xl mb-4 font-bold text-gray-600">正解数: <span id="final-score" class="text-5xl md:text-7xl text-[#E67E22] font-black">0</span> / 5</p>
+                <div class="flex flex-col md:flex-row gap-4 md:gap-6 mb-8 w-full">
+                    <!-- ランクカード -->
+                    <div class="flex-1 bg-white rounded-[2rem] md:rounded-[3rem] p-5 md:p-8 shadow-2xl border-[4px] md:border-[6px] border-[#27AE60] flex flex-col justify-center">
+                        <p class="text-[10px] md:text-2xl uppercase tracking-widest text-gray-400 font-black mb-1">リサイクル・ランク</p>
+                        <div id="result-rank" class="text-xl md:text-4xl font-black text-[#27AE60] mb-1">リサイクル・マスター</div>
+                        <p id="result-comment" class="text-sm md:text-2xl font-bold text-gray-600">地球を救う天才だ！</p>
                     </div>
-                    <div class="w-full md:w-[450px] bg-purple-50 rounded-[2rem] md:rounded-[3rem] p-6 md:p-8 shadow-2xl border-[4px] md:border-[6px] border-purple-200">
-                        <p class="text-base md:text-2xl uppercase tracking-widest text-purple-400 font-black mb-3 md:mb-4">✨ AIエコ博士に質問</p>
-                        <div class="flex flex-col gap-4">
-                            <div class="flex gap-2 md:gap-3">
-                                <input type="text" id="ai-question-input" placeholder="マイクをおして話してね！" class="flex-1 p-3 md:p-4 rounded-xl md:rounded-2xl border-2 md:border-4 border-purple-100 text-sm md:text-lg focus:outline-none focus:border-purple-300 font-bold" readonly>
-                                <button id="mic-btn" onclick="toggleSpeechRecognition()" class="mic-guide-pulse bg-purple-100 text-purple-600 p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-purple-200 transition flex items-center justify-center min-w-[50px] md:min-w-[70px] shadow-md">
+                    <!-- AI質問カード (モバイル最適化) -->
+                    <div class="w-full md:w-[450px] bg-purple-50 rounded-[2rem] md:rounded-[3rem] p-4 sm:p-6 md:p-8 shadow-2xl border-[4px] md:border-[6px] border-purple-200">
+                        <p class="text-sm md:text-2xl uppercase tracking-widest text-purple-400 font-black mb-3 md:mb-4">✨ AIエコ博士に質問</p>
+                        <div class="flex flex-col gap-3 md:gap-4">
+                            <div class="flex gap-2 items-stretch">
+                                <!-- 入力欄をflex-growさせつつ、最小幅を確保 -->
+                                <input type="text" id="ai-question-input" placeholder="マイクをおしてね！" class="flex-1 min-w-0 p-3 md:p-4 rounded-xl md:rounded-2xl border-2 md:border-4 border-purple-100 text-xs sm:text-sm md:text-lg focus:outline-none focus:border-purple-300 font-bold" readonly>
+                                <!-- マイクボタンのサイズをスマホで最適化 -->
+                                <button id="mic-btn" onclick="toggleSpeechRecognition()" class="mic-guide-pulse bg-purple-100 text-purple-600 p-2 sm:p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-purple-200 transition flex items-center justify-center min-w-[44px] md:min-w-[70px] shadow-md shrink-0">
                                     <svg id="mic-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-10 md:w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                                     </svg>
                                 </button>
                             </div>
-                            <button onclick="askGeminiFree()" class="bg-purple-500 text-white py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-xl md:text-2xl hover:bg-purple-600 transition shadow-lg">
+                            <button onclick="askGeminiFree()" class="bg-purple-500 text-white py-3 md:py-5 rounded-xl md:rounded-2xl font-black text-lg md:text-2xl hover:bg-purple-600 transition shadow-lg">
                                 ✨ 博士に聞く
                             </button>
                         </div>
@@ -426,7 +427,7 @@
         </div>
     </div>
 
-    <!-- FOOTER: 正式名称修正版 -->
+    <!-- FOOTER -->
     <footer class="fixed bottom-0 w-full bg-white border-t border-gray-100 py-1 text-center z-40">
         <p class="text-[8px] md:text-[10px] text-gray-400 font-black tracking-tighter md:tracking-widest uppercase px-2">
             © 2026 NPO RUM Alliance - NEXT GENERATION RECYCLE ADVENTURE 
@@ -436,7 +437,8 @@
     </footer>
 
     <script>
-        const apiKey = ""; 
+        // APIキーは Vercel Serverless Function (/api/gemini) 内で環境変数から読み込まれる
+        // クライアント側にAPIキーを書かないことで、公開リポジトリでも安全に運用できる
         let score = 0;
         let answeredSteps = [false, false, false, false, false, false];
         let mission2Timer = null, mission2ProgressTimer = null, currentProgress2 = 0;
@@ -446,7 +448,6 @@
         let recognition;
         let isRecording = false;
 
-        // --- Speech Recognition ---
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
@@ -463,10 +464,7 @@
                 document.getElementById('ai-question-input').value = transcript;
                 setTimeout(() => { askGeminiFree(); }, 500);
             };
-            recognition.onerror = (event) => {
-                console.error('Recognition error:', event.error);
-                stopRecordingUI();
-            };
+            recognition.onerror = () => { stopRecordingUI(); };
             recognition.onend = () => { stopRecordingUI(); };
         }
 
@@ -479,27 +477,22 @@
         function stopRecordingUI() {
             isRecording = false;
             document.getElementById('mic-btn').classList.remove('recording-active');
-            document.getElementById('ai-question-input').placeholder = "マイクボタンをおして話してね！";
+            document.getElementById('ai-question-input').placeholder = "マイクをおしてね！";
         }
 
-        // --- AI API (Gemini) ---
         async function callGemini(prompt) {
-            const systemPrompt = "あなたは自動車リサイクルの専門家「エコ博士」です。小学生にもわかるように、優しく、楽しく、専門用語を避けて解説してください。語尾は『〜だよ』『〜だね』など。回答は短く（150文字以内）。";
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // 自前の Serverless Function (/api/gemini) を呼ぶ
+            // システムプロンプトとAPIキーはサーバー側で付与されるため、ここでは prompt のみ送る
             const fetchWithRetry = async (retries = 0) => {
                 try {
-                    const response = await fetch(url, {
+                    const response = await fetch('/api/gemini', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
+                        body: JSON.stringify({ prompt })
                     });
                     if (!response.ok) throw new Error('API Error');
                     const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    return data.text;
                 } catch (error) {
                     if (retries < 4) {
                         const delay = Math.pow(2, retries) * 1000;
@@ -509,7 +502,7 @@
                     throw error;
                 }
             };
-            try { return await fetchWithRetry(); } catch (err) { return "通信エラーだよ。また後で試してね。"; }
+            try { return await fetchWithRetry(); } catch (err) { return "通信エラーだよ。しばらくしてからもう一度ためしてね。"; }
         }
 
         async function askGeminiForMission(step) {
@@ -585,12 +578,10 @@
             });
             
             stopMission2AutoCycle(); stopMission4AutoCycle(); stopMission5AutoCycle();
-
             if (pageId === 2) startMission2AutoCycle();
             if (pageId === 4) startMission4AutoCycle();
             if (pageId === 5) startMission5AutoCycle();
             if (pageId === 1 && !window.chartInited) { setTimeout(initChart, 300); window.chartInited = true; }
-            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -598,7 +589,6 @@
         function startMission2AutoCycle() {
             if (mission2Timer) return;
             const steps = ['step1', 'step2', 'step3']; let stepIdx = 0; const cycleTime = 3000; const updateInterval = 50;
-            currentProgress2 = 0;
             mission2Timer = setInterval(() => {
                 stepIdx = (stepIdx + 1) % steps.length;
                 const targetBtn = document.querySelector(`.tab-btn[data-target="${steps[stepIdx]}"]`);
@@ -612,17 +602,11 @@
                 if (bar) bar.style.width = `${currentProgress2}%`;
             }, updateInterval);
         }
-        function stopMission2AutoCycle() {
-            clearInterval(mission2Timer); mission2Timer = null;
-            clearInterval(mission2ProgressTimer); mission2ProgressTimer = null;
-            const bar = document.getElementById('mission2-progress-bar');
-            if (bar) bar.style.width = '0%';
-        }
+        function stopMission2AutoCycle() { clearInterval(mission2Timer); mission2Timer = null; clearInterval(mission2ProgressTimer); mission2ProgressTimer = null; }
 
         function startMission4AutoCycle() {
             if (mission4Timer) return;
             const steps = ['1', '2', '3']; let stepIdx = 0; const cycleTime = 3000; const updateInterval = 50;
-            currentProgress4 = 0;
             mission4Timer = setInterval(() => {
                 stepIdx = (stepIdx + 1) % steps.length;
                 const targetBtn = document.querySelector(`.step-btn[data-step="${steps[stepIdx]}"]`);
@@ -636,36 +620,22 @@
                 if (bar) bar.style.width = `${currentProgress4}%`;
             }, updateInterval);
         }
-        function stopMission4AutoCycle() {
-            clearInterval(mission4Timer); mission4Timer = null;
-            clearInterval(mission4ProgressTimer); mission4ProgressTimer = null;
-            const bar = document.getElementById('mission4-progress-bar');
-            if (bar) bar.style.width = '0%';
-        }
+        function stopMission4AutoCycle() { clearInterval(mission4Timer); mission4Timer = null; clearInterval(mission4ProgressTimer); mission4ProgressTimer = null; }
 
         function startMission5AutoCycle() {
             if (mission5Timer) return;
             const elements = ['m5-s1', 'm5-a1', 'm5-s2', 'm5-a2', 'm5-s3'];
-            const cycleTime = 5000; const updateInterval = 50; currentProgress5 = 0;
-
-            const resetM5 = () => {
-                elements.forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('active'); });
-                const comment = document.getElementById('m5-comment'); if (comment) comment.classList.add('opacity-0');
-            };
-
+            const cycleTime = 5000; const updateInterval = 50;
             const runSequence = () => {
-                resetM5();
+                elements.forEach(id => document.getElementById(id).classList.remove('active'));
+                document.getElementById('m5-comment').classList.add('opacity-0');
                 elements.forEach((id, idx) => {
                     setTimeout(() => {
-                        const el = document.getElementById(id); if (el) el.classList.add('active');
-                        if (idx === elements.length - 1) {
-                            const comment = document.getElementById('m5-comment');
-                            if (comment) comment.classList.remove('opacity-0');
-                        }
+                        document.getElementById(id).classList.add('active');
+                        if (idx === elements.length - 1) document.getElementById('m5-comment').classList.remove('opacity-0');
                     }, idx * 600);
                 });
             };
-
             runSequence();
             mission5Timer = setInterval(() => { runSequence(); currentProgress5 = 0; }, cycleTime);
             mission5ProgressTimer = setInterval(() => {
@@ -675,14 +645,9 @@
                 if (bar) bar.style.width = `${currentProgress5}%`;
             }, updateInterval);
         }
-        function stopMission5AutoCycle() {
-            clearInterval(mission5Timer); mission5Timer = null;
-            clearInterval(mission5ProgressTimer); mission5ProgressTimer = null;
-            const bar = document.getElementById('mission5-progress-bar');
-            if (bar) bar.style.width = '0%';
-        }
+        function stopMission5AutoCycle() { clearInterval(mission5Timer); mission5Timer = null; clearInterval(mission5ProgressTimer); mission5ProgressTimer = null; }
 
-        // --- Quiz & Charts ---
+        // --- Quiz System ---
         const quizData = {
             1: { correct: 1, feedback: { ok: "せいかい！🎉", ng: "ざんねん！Bだよ😢" } },
             2: { correct: 1, feedback: { ok: "せいかい！✨", ng: "ざんねん！Bだよ😢" } },
@@ -697,17 +662,10 @@
             const isCorrect = (choice === quizData[step].correct);
             if (isCorrect) { score++; playCorrectSound(); } else { playWrongSound(); }
             const buttons = document.querySelectorAll(`#quiz-options-${step} button`);
-            
             buttons.forEach((btn, idx) => {
                 btn.disabled = true;
-                if (idx === quizData[step].correct) {
-                    btn.classList.add('bg-green-500', 'text-white', 'border-green-600');
-                    btn.classList.remove('bg-white', 'border-yellow-300', 'border-green-300', 'border-orange-300', 'border-purple-300', 'border-blue-300');
-                }
-                else if (idx === choice) {
-                    btn.classList.add('bg-red-400', 'text-white', 'border-red-500');
-                    btn.classList.remove('bg-white');
-                }
+                if (idx === quizData[step].correct) btn.classList.add('bg-green-500', 'text-white', 'border-green-600');
+                else if (idx === choice) btn.classList.add('bg-red-400', 'text-white', 'border-red-500');
                 else btn.classList.add('opacity-30', 'bg-gray-100');
             });
             const fb = document.getElementById(`quiz-feedback-${step}`);
@@ -716,10 +674,7 @@
             fb.className = isCorrect ? 'mt-1 text-center font-black text-xl feedback-correct' : 'mt-1 text-center font-black text-xl feedback-wrong';
             document.getElementById(`ai-btn-${step}`).classList.remove('hidden');
             document.getElementById(`next-btn-${step}`).classList.remove('hidden');
-            
-            if (step === 2) stopMission2AutoCycle();
-            if (step === 4) stopMission4AutoCycle();
-            if (step === 5) stopMission5AutoCycle();
+            stopMission2AutoCycle(); stopMission4AutoCycle(); stopMission5AutoCycle();
         }
 
         function showResults() {
@@ -728,15 +683,13 @@
             document.getElementById('final-score').textContent = score;
             const rank = document.getElementById('result-rank');
             const comment = document.getElementById('result-comment');
-            const emoji = document.getElementById('result-emoji');
-            if (score === 5) { rank.textContent = "S級 マスター"; comment.textContent = "完璧だ！高度な資源循環のリーダーだね！"; emoji.textContent = "👑"; }
-            else if (score >= 3) { rank.textContent = "A級 ヒーロー"; comment.textContent = "素晴らしい！クルマにかなり詳しいね！"; emoji.textContent = "🌟"; }
-            else { rank.textContent = "B級 ルーキー"; comment.textContent = "ありがとう！全問正解を目指して再挑戦だ！"; emoji.textContent = "🚲"; }
+            if (score === 5) { rank.textContent = "S級 マスター"; comment.textContent = "完璧だ！高度な資源循環のリーダーだね！"; }
+            else if (score >= 3) { rank.textContent = "A級 ヒーロー"; comment.textContent = "素晴らしい！クルマにかなり詳しいね！"; }
+            else { rank.textContent = "B級 ルーキー"; comment.textContent = "ありがとう！全問正解を目指して再挑戦だ！"; }
         }
 
         function initChart() {
-            const canvas = document.getElementById('materialsChart'); if (!canvas) return;
-            const ctx = canvas.getContext('2d');
+            const ctx = document.getElementById('materialsChart').getContext('2d');
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -763,7 +716,6 @@
             });
         }
 
-        // Tab events
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -775,7 +727,6 @@
                 }[btn.dataset.target];
                 document.getElementById('tech-icon').textContent = info.i;
                 document.getElementById('tech-desc').textContent = info.d;
-                if (mission2Timer) currentProgress2 = 0;
             });
         });
 
@@ -790,7 +741,6 @@
                 }[btn.dataset.step];
                 document.getElementById('batt-title').textContent = info.t;
                 document.getElementById('batt-desc').textContent = info.d;
-                if (mission4Timer) currentProgress4 = 0;
             });
         });
     </script>
